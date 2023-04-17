@@ -2,13 +2,10 @@ package percy.selenium.integration;
 
 import com.sun.net.httpserver.HttpServer;
 import io.percy.selenium.Percy;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -17,8 +14,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class VisualTest {
     private static final String TEST_URL = "https://www.google.co.in/";
@@ -26,53 +21,71 @@ public class VisualTest {
     private static HttpServer server;
     private static WebDriver driver;
     private static Percy percy;
+    private static String USERNAME = "";
+    private static String PASSWORD = "";
+    private static int TEST_ID = 1;
 
-    private static int COUNTER = 1;
-
+    /*********************************************************************************************************
+     * @function this method will launch browser
+     * @description this function is used to create driver object and launch the Chrome browser. same driver
+     *              reference is passed to create Percy reference.
+     *
+     *********************************************************************************************************/
     @BeforeMethod
-    public void launchBrowser() throws IOException {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\002VMG744\\IdeaProjects\\example-percy-java-selenium\\chromedriver.exe");
+    public void launchBrowser(){
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\002VMG744\\IdeaProjects\\VisualAutomationTesting\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
+        options.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(options);
-       /*  driver=new ChromeDriver();
-        driver.manage().window().maximize();*/
-
-
-        //driver.manage().window().maximize();
+        driver.manage().window().maximize();
         percy = new Percy(driver);
     }
 
-    /*@Test(invocationCount = 5 )
-    public void testVisual() {
-        driver.get(TEST_URL);
-        System.out.println(driver.getTitle());
-        Random random = new Random();
-// Generates random integers 0 to 49
-        int x = random.nextInt(100);
-        // Take a Percy snapshot.
-        percy.snapshot("Test Parallel "+x);
-    }*/
-//, invocationCount = 5
-    @Test(dataProvider = "readurls")
-    private void testVisual(String url) throws InterruptedException {
+
+    /**************************************************************************************************************************************************************
+     * This the actual test we are going to perform, where percy's snapshot method is called to capture screenshot
+     * @notes 1. if we want to target multiple urls/pages for visual testing depending on number of urls pass the same number for invocationCount
+     * eg: If we want to check 5 pages/urls for Visual Testing  then test will be => @Test(dataProvider = "readurls", invocationCount = 5)
+     *     and make sure only single url which is reference for Visual Testing need to pass from @DataProvider(name = "readurls")
+     * 2. For second build remove invocationCount and execute the same script for those targeted 5 urls.
+     *    pass needs to be validated 5 url from our @DataProvider(name = "readurls") defined below.
+     ************************************************************************************************************************************************************/
+    @Test(dataProvider = "readurls", invocationCount = 1)
+    private void testVisual(String url) throws Exception {
         driver.get(url);
-        Thread.sleep(3000);
+        Thread.sleep(5000);
         System.out.println(driver.getTitle());
-        int x = COUNTER++;
-        System.out.print("COUNTER VALUE - " + x);
-        percy.snapshot("Test Parallel Target " + x);
+        loginIntoAEM(url);
+        percy.snapshot("Test " + TEST_ID++);
     }
 
+    /***********************************************************************************************
+     * this the data provider in TestNg. It is the way to parameter same script with multiple data.
+     * With @DataProvider(name = "readurls") we can execute single percy build for multiple pages/urls.
+     *
+     ************************************************************************************************/
     @DataProvider(name = "readurls")
     private Object[][] getURLs() throws Exception {
         ArrayList<Object[]> testObjArray = new ArrayList<>();
         testObjArray.add(new Object[]{"https://ensure.com/"});
-        testObjArray.add(new Object[]{"https://www.family.abbott/vn-vi/ensure/home.html"});
-        testObjArray.add(new Object[]{"https://ensure.ca/en"});
-        testObjArray.add(new Object[]{"https://www.pedialyte.abbott/mx/home.html"});
-        testObjArray.add(new Object[]{"https://pediasure.com/"});
+       /* testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/test.html?wcmmode=disabled"});
+        testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/job-cdn-slide.html?wcmmode=disabled"});
+        testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/jo-author.html?wcmmode=disabled"});
+        testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/jo-cdn-grid.html?wcmmode=disabled"});
+        testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/jo-cdn-slider.html?wcmmode=disabled"});
+       */
         return testObjArray.toArray(new Object[0][]);
+    }
+
+    public void loginIntoAEM(String url) throws Exception {
+        if (url.contains("author-p14557-e52630")) {
+            driver.findElement(By.cssSelector("._coral-Accordion-itemHeader coral-accordion-item-label")).click();
+            driver.findElement(By.id("username")).sendKeys(USERNAME);
+            driver.findElement(By.id("password")).sendKeys(PASSWORD);
+            driver.findElement(By.id("submit-button")).click();
+            Thread.sleep(3000);
+        }
     }
 
     @AfterMethod
