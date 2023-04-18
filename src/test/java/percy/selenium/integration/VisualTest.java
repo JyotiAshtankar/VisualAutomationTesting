@@ -63,12 +63,10 @@ public class VisualTest {
     private Object[][] getURLs() throws Exception {
         ArrayList<Object[]> testObjArray = new ArrayList<>();
         testObjArray.add(new Object[]{"https://ensure.com/"});
-       /* testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/test.html?wcmmode=disabled"});
-        testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/job-cdn-slide.html?wcmmode=disabled"});
-        testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/jo-author.html?wcmmode=disabled"});
-        testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/jo-cdn-grid.html?wcmmode=disabled"});
-        testObjArray.add(new Object[]{"https://author-p14557-e52630.adobeaemcloud.com/content/qa-team/regression/group/en/components/jobopenings/jo-cdn-slider.html?wcmmode=disabled"});
-       */
+        /*testObjArray.add(new Object[]{"URL1"});
+        testObjArray.add(new Object[]{"URL2"});
+        testObjArray.add(new Object[]{"URL2"});*/
+
         return testObjArray.toArray(new Object[0][]);
     }
 
