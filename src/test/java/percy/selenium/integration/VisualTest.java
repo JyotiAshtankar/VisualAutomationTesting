@@ -1,6 +1,5 @@
 package percy.selenium.integration;
 
-import com.sun.net.httpserver.HttpServer;
 import io.percy.selenium.Percy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,14 +10,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
 
 public class VisualTest {
-    private static final String TEST_URL = "https://www.google.co.in/";
-    private static ExecutorService serverExecutor;
-    private static HttpServer server;
     private static WebDriver driver;
     private static Percy percy;
     private static String USERNAME = "";
@@ -32,7 +26,7 @@ public class VisualTest {
      *
      *********************************************************************************************************/
     @BeforeMethod
-    public void launchBrowser(){
+    public void launchBrowser() {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\002VMG744\\IdeaProjects\\VisualAutomationTesting\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
